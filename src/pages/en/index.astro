@@ -13,7 +13,9 @@ const joinHref = route("join", "en");
   <h1>{ring.name}</h1>
   <p class="lead">{ring.description.en}</p>
   <a class="sign jump" href={randomHref} target="_blank">Jump to a random site</a>
-  <a href={membersHref}>All members</a>.
+  <p>
+    <a href={membersHref}>See all members</a>.
+  </p>
   <p>
     Got a site? Read the <a href={rulesHref}>rules</a> and
     <a href={joinHref}>join us</a>.
