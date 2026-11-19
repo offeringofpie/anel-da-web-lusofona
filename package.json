@@ -1,8 +1,9 @@
 {
-  "name": "anel-da-we-lusofona",
+  "name": "anel-da-web-lusofona",
   "type": "module",
   "version": "0.1.0",
   "author": "J Lopes (https://jlopes.eu)",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "astro dev",
