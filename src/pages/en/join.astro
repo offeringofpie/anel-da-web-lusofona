@@ -1,0 +1,49 @@
+---
+import Base from "../../layouts/Base.astro";
+import EmbedGenerator from "../../components/EmbedGenerator.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
+import Step from "../../components/Step.astro";
+import { ring } from "../../lib/members";
+import { route } from "../../lib/i18n";
+import { examples, memberSnippet } from "../../lib/example";
+
+const rulesHref = route("rules", "en");
+const pullHref = `${ring.repo}/compare`;
+const exampleMember = memberSnippet(examples.en);
+---
+
+<Base lang="en" page="join" title={`How to join · ${ring.name}`} description={`Show the banner and add your site to ${ring.name} with a pull request.`}>
+  <h1>How to join</h1>
+  <p class="lead">
+    Show the banner, add your site to the list and open a pull request. Your
+    site can be in any language.
+  </p>
+
+  <Step number={1} title="Show the banner" id="banner">
+    <p>Type your site's address, copy the code and paste it into your site.</p>
+    <EmbedGenerator lang="en" />
+    <p>If your site has a dark background, add <code>data-theme="dark"</code> to the <code>&lt;nav&gt;</code>.</p>
+  </Step>
+
+  <Step number={2} title="Add your site">
+    <p>
+      Fork <a href={ring.repo}>this repository</a> and add this to the end of
+      <code>src/data/members.json</code>. Only <code>name</code> and
+      <code>url</code> are required.
+    </p>
+    <CodeBlock lang="en" code={exampleMember} />
+  </Step>
+
+  <Step number={3} title="Open a pull request">
+    <p>Before you open it, check that:</p>
+    <ul>
+      <li>Your site is reachable over https.</li>
+      <li>The banner is visible on your site.</li>
+      <li>Your site follows the <a href={rulesHref}>rules</a>.</li>
+    </ul>
+    <p>
+      When everything is ready, <a href={pullHref}>open the pull request on GitHub</a>.
+      A maintainer reviews it and merges.
+    </p>
+  </Step>
+</Base>

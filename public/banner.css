@@ -1,0 +1,74 @@
+.webring {
+  --link: light-dark(#05663f, #5fd39a);
+  --link-hover: light-dark(#034d2f, #9be7c0);
+  --focus: light-dark(#9c7c00, #d9b44a);
+  --space: 0.5rem;
+  --margin: 1rem;
+  --radius-small: 0.25rem;
+  --target: 1.75rem;
+  --focus-width: 3px;
+  --focus-offset: 2px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  --text-size: 0.95rem;
+  --hop-size: 1.2rem;
+  --line-height: 1.4;
+  --weight-bold: 700;
+
+  color-scheme: light dark;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space);
+  margin: var(--margin) 0;
+  padding: var(--space);
+  font-family: var(--font);
+  font-size: var(--text-size);
+  line-height: var(--line-height);
+
+  &[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  &[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  @media (pointer: coarse) {
+    --target: 2.75rem;
+  }
+
+  a:focus-visible {
+    outline: var(--focus-width) solid var(--focus);
+    outline-offset: var(--focus-offset);
+  }
+
+  .home {
+    display: flex;
+    align-items: center;
+    gap: var(--space);
+    color: inherit;
+    font-weight: var(--weight-bold);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .hop {
+    display: grid;
+    place-items: center;
+    min-width: var(--target);
+    min-height: var(--target);
+    border-radius: var(--radius-small);
+    color: var(--link);
+    font-family: var(--mono);
+    font-size: var(--hop-size);
+    font-weight: var(--weight-bold);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link-hover);
+    }
+  }
+}

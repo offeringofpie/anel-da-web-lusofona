@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import EmbedGenerator from "../components/EmbedGenerator.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import Step from "../components/Step.astro";
+import { ring } from "../lib/members";
+import { route } from "../lib/i18n";
+import { examples, memberSnippet } from "../lib/example";
+
+const rulesHref = route("rules", "pt");
+const pullHref = `${ring.repo}/compare`;
+const exampleMember = memberSnippet(examples.pt);
+---
+
+<Base lang="pt" page="join" title={`Como aderir · ${ring.name}`} description="Mostra a faixa e junta o teu site a este webring com um pull request.">
+  <h1>Como aderir</h1>
+  <p class="lead">
+    Mostra a faixa, acrescenta o teu site à lista e abre um pull request. O
+    site pode estar em qualquer idioma.
+  </p>
+
+  <Step number={1} title="Mostra a faixa" id="banner">
+    <p>Escreve o endereço do teu site, copia o código e cola-o no teu site.</p>
+    <EmbedGenerator lang="pt" />
+    <p>Se o teu site tem fundo escuro, acrescenta <code>data-theme="dark"</code> ao <code>&lt;nav&gt;</code>.</p>
+  </Step>
+
+  <Step number={2} title="Acrescenta o teu site">
+    <p>
+      Faz fork <a href={ring.repo}>deste repositório</a> e acrescenta isto ao fim de
+      <code>src/data/members.json</code>. Só <code>name</code> e <code>url</code>
+      são obrigatórios.
+    </p>
+    <CodeBlock lang="pt" code={exampleMember} />
+  </Step>
+
+  <Step number={3} title="Abre um pull request">
+    <p>Antes de o abrires, confirma que:</p>
+    <ul>
+      <li>O teu site está acessível por https.</li>
+      <li>A faixa está visível no teu site.</li>
+      <li>O site segue as <a href={rulesHref}>regras</a>.</li>
+    </ul>
+    <p>
+      Quando estiver tudo pronto, <a href={pullHref}>abre o pull request no GitHub</a>.
+      Quem gere o webring revê-o e faz o merge.
+    </p>
+  </Step>
+</Base>

@@ -1,0 +1,19 @@
+---
+import Hop from "../../../components/Hop.astro";
+import { members, neighbour } from "../../../lib/members";
+import { hostname } from "../../../lib/banner";
+
+export function getStaticPaths() {
+  return members.map((member, index) => {
+    const target = neighbour(index, "next");
+    return {
+      params: { hostname: hostname(member.url) },
+      props: { target: target.url, name: target.name },
+    };
+  });
+}
+
+const { target, name } = Astro.props;
+---
+
+<Hop target={target} name={name} />

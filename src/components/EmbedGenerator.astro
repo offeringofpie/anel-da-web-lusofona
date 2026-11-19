@@ -1,0 +1,65 @@
+---
+import CodeBlock from "./CodeBlock.astro";
+import { ring, members, withBase } from "../lib/members";
+import type { Lang } from "../lib/i18n";
+import { ringUrl } from "../lib/snippets";
+import { examples } from "../lib/example";
+import { bannerSnippet, hostname } from "../lib/banner";
+
+type Props = {
+  lang: Lang;
+};
+
+type Strings = {
+  site: string;
+};
+
+const strings: Record<Lang, Strings> = {
+  pt: {
+    site: "O endereço do teu site",
+  },
+  en: {
+    site: "Your site's address",
+  },
+};
+
+const { lang } = Astro.props;
+
+const text = strings[lang];
+const exampleSite = examples[lang].site;
+const previewHost = hostname(members[0].url);
+const localRingUrl = withBase("/");
+
+const snippet = bannerSnippet({ ringUrl, ringName: ring.name, host: hostname(exampleSite) });
+const preview = bannerSnippet({ ringUrl: localRingUrl, ringName: ring.name, host: previewHost });
+---
+
+<div class="generator" data-ring-url={ringUrl} data-ring-name={ring.name} data-example-site={exampleSite}>
+  <label class="site">
+    {text.site}
+    <input type="url" name="site" placeholder={exampleSite} autocomplete="url" />
+  </label>
+
+  <div class="preview" inert set:html={preview} />
+
+  <CodeBlock lang={lang} code={snippet} />
+</div>
+
+<script>
+  import { bannerSnippet, hostname, siteOrigin } from "../lib/banner";
+
+  function setup(generator: HTMLElement): void {
+    const snippet = generator.querySelector<HTMLElement>(".snippet")!;
+    const siteInput = generator.querySelector<HTMLInputElement>('input[name="site"]')!;
+    const { ringUrl = "", ringName = "", exampleSite = "" } = generator.dataset;
+
+    generator.addEventListener("input", () => {
+      const site = siteInput.value.trim();
+      const host = hostname(siteOrigin(site) ?? exampleSite);
+
+      snippet.dispatchEvent(new CustomEvent("update", { detail: bannerSnippet({ ringUrl, ringName, host }) }));
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".generator").forEach(setup);
+</script>

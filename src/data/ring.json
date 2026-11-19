@@ -1,0 +1,10 @@
+{
+  "name": "Anel da Web Lusófona",
+  "description": {
+    "pt": "Uma lista circular de sites pessoais portugueses.",
+    "en": "A circular list of personal Portuguese sites."
+  },
+  "url": "https://offeringofpie.github.io/anel-da-web-lusofona",
+  "repo": "https://github.com/offeringofpie/anel-da-web-lusofona",
+  "slug": "webring-pt"
+}

@@ -1,0 +1,9 @@
+---
+import Hop from "../components/Hop.astro";
+import { ring, members, stableAny } from "../lib/members";
+
+const target = stableAny(ring.slug);
+const candidates = members.map((member) => member.url);
+---
+
+<Hop target={target.url} name={target.name} candidates={candidates} />

@@ -1,0 +1,168 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import { ring, withBase } from "../lib/members";
+import { themeKey } from "../lib/theme";
+import { langs, locales, route, type Lang, type Page } from "../lib/i18n";
+
+type Props = {
+  title: string;
+  description?: string;
+  lang: Lang;
+  page: Page;
+};
+
+type NavPage = "join" | "members" | "rules";
+
+type NavLink = {
+  label: string;
+  href: string;
+  current: "page" | undefined;
+};
+
+type LangLink = NavLink & {
+  htmlLang: string;
+  name: string;
+};
+
+type Strings = {
+  skip: string;
+  navLabel: string;
+  langsLabel: string;
+  nav: Record<NavPage, string>;
+  footer: string;
+  random: string;
+  credit: string;
+};
+
+const strings: Record<Lang, Strings> = {
+  pt: {
+    skip: "Saltar para o conteúdo",
+    navLabel: "Principal",
+    langsLabel: "Idioma",
+    nav: {
+      join: "Aderir",
+      members: "Membros",
+      rules: "Regras",
+    },
+    footer: "é um webring, uma lista circular de sites independentes.",
+    random: "Visita um membro ao acaso",
+    credit: "Títulos em Bazar, de Olinda Martins (FBAUP Types), sob licença CC BY-ND 2.5 PT.",
+  },
+  en: {
+    skip: "Skip to content",
+    navLabel: "Primary",
+    langsLabel: "Language",
+    nav: {
+      join: "Join us",
+      members: "Members",
+      rules: "Rules",
+    },
+    footer: "is a webring: a circular list of independent sites.",
+    random: "Visit a random member",
+    credit: "Headings set in Bazar by Olinda Martins (FBAUP Types), under CC BY-ND 2.5 PT.",
+  },
+};
+
+const { title, description, lang, page } = Astro.props;
+
+const text = strings[lang];
+const homeHref = route("home", lang);
+const randomHref = withBase("/random/");
+const faviconHref = withBase("/favicon.svg");
+const fontHref = "https://fbauptypes.fba.up.pt/bazar_page.html";
+const flagsHref = withBase("/flags.gif");
+const flagWidth = 24;
+const flagHeight = 18;
+
+const navPages: NavPage[] = ["join", "members", "rules"];
+const nav = navPages.map((key): NavLink => {
+  return {
+    label: text.nav[key],
+    href: route(key, lang),
+    current: key === page ? "page" : undefined,
+  };
+});
+
+const langLinks = langs.map((key): LangLink => {
+  return {
+    label: key.toUpperCase(),
+    href: route(page, key),
+    htmlLang: locales[key].htmlLang,
+    name: locales[key].name,
+    current: key === lang ? "page" : undefined,
+  };
+});
+
+const alternates = langs.map((key) => {
+  return { hreflang: locales[key].htmlLang, href: new URL(route(page, key), Astro.site).href };
+});
+---
+
+<!doctype html>
+<html lang={locales[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <script is:inline define:vars={{ themeKey }}>
+      try {
+        const saved = localStorage.getItem(themeKey);
+
+        if (saved === "light" || saved === "dark") {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch {}
+    </script>
+    <Font cssVariable="--font-bazar" preload />
+    <Font cssVariable="--font-literata" preload />
+    {description && <meta name="description" content={description} />}
+    {alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />)}
+  </head>
+  <body>
+    <a class="skip" href="#main">{text.skip}</a>
+    <header class="masthead">
+      <a class="brand" href={homeHref}>
+        <img src={flagsHref} alt="" width={flagWidth} height={flagHeight} />
+        {ring.name}
+      </a>
+      <nav class="menu" aria-label={text.navLabel}>
+        <ul>
+          {
+            nav.map((item) => {
+              return (
+                <li>
+                  <a href={item.href} aria-current={item.current}>{item.label}</a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+      <nav class="langs" aria-label={text.langsLabel}>
+        {
+          langLinks.map((link) => {
+            return (
+              <a href={link.href} lang={link.htmlLang} hreflang={link.htmlLang} title={link.name} aria-current={link.current}>
+                {link.label}
+              </a>
+            );
+          })
+        }
+      </nav>
+      <ThemeToggle lang={lang} />
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="colophon">
+      <p>
+        {ring.name} {text.footer}
+        <a href={randomHref}>{text.random}</a>.
+      </p>
+      <p><a href={fontHref}>{text.credit}</a></p>
+    </footer>
+  </body>
+</html>

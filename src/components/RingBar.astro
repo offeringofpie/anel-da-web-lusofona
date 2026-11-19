@@ -1,0 +1,31 @@
+---
+import CodeBlock from "./CodeBlock.astro";
+import { ring, withBase } from "../lib/members";
+import { route, type Lang } from "../lib/i18n";
+import { badgeWidth, badgeHeight, barSnippet } from "../lib/snippets";
+
+type Props = {
+  lang: Lang;
+};
+
+const intros: Record<Lang, string> = {
+  pt: "Se preferes uma imagem, cola esta barra no teu site. Leva ao diretório do webring.",
+  en: "If you'd rather use an image, paste this bar into your site. It links to the ring's directory.",
+};
+
+const { lang } = Astro.props;
+
+const intro = intros[lang];
+const homeHref = route("home", "pt");
+const barSrc = withBase("/pt.gif");
+---
+
+<div class="bar">
+  <p>{intro}</p>
+  <div class="preview">
+    <a href={homeHref}>
+      <img src={barSrc} alt={ring.name} width={badgeWidth} height={badgeHeight} />
+    </a>
+  </div>
+  <CodeBlock lang={lang} code={barSnippet} />
+</div>

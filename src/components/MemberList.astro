@@ -1,0 +1,77 @@
+---
+import { members } from "../lib/members";
+import { locales, type Lang } from "../lib/i18n";
+import { badgeWidth, badgeHeight } from "../lib/snippets";
+import { hostname } from "../lib/banner";
+
+type Props = {
+  lang: Lang;
+};
+
+type Strings = {
+  visit: string;
+  visitLabel: (name: string) => string;
+  feed: string;
+  feedLabel: (name: string) => string;
+  languages: string;
+};
+
+const strings: Record<Lang, Strings> = {
+  pt: {
+    visit: "Visitar",
+    visitLabel: (name) => `Visitar ${name}`,
+    feed: "Feed",
+    feedLabel: (name) => `Feed de ${name}`,
+    languages: "Idiomas",
+  },
+  en: {
+    visit: "Visit",
+    visitLabel: (name) => `Visit ${name}`,
+    feed: "Feed",
+    feedLabel: (name) => `${name} feed`,
+    languages: "Languages",
+  },
+};
+
+const { lang } = Astro.props;
+
+const text = strings[lang];
+const languageNames = new Intl.DisplayNames([locales[lang].htmlLang], { type: "language" });
+
+function languageList(codes: string[]): string {
+  return codes.map((code) => languageNames.of(code) ?? code).join(", ");
+}
+---
+
+<ol class="street">
+  {
+    members.map((member, index) => {
+      return (
+        <li>
+          <h3 class="sign">
+            <a href={member.url} target="_blank">{member.name}</a>
+          </h3>
+          <div class="front">
+            <div class="plates">
+              <span class="number" aria-hidden="true">Nº {index + 1}</span>
+              {member.banner && (
+                <img class="banner" src={member.banner} alt="" width={badgeWidth} height={badgeHeight} loading="lazy" />
+              )}
+            </div>
+            <p class="host">{hostname(member.url)}</p>
+            {member.description && <p class="description">{member.description}</p>}
+            {member.languages && (
+              <p class="languages">{text.languages}: {languageList(member.languages)}</p>
+            )}
+            <p class="links">
+              <a href={member.url} target="_blank" aria-label={text.visitLabel(member.name)}>{text.visit}</a>
+              {member.feed && (
+                <a href={member.feed} target="_blank" aria-label={text.feedLabel(member.name)}>{text.feed}</a>
+              )}
+            </p>
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>

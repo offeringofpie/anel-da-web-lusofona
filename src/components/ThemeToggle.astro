@@ -1,0 +1,65 @@
+---
+import type { Lang } from "../lib/i18n";
+
+type Props = {
+  lang: Lang;
+};
+
+const labels: Record<Lang, string> = {
+  pt: "Modo escuro",
+  en: "Dark mode",
+};
+
+const { lang } = Astro.props;
+
+const label = labels[lang];
+const iconSize = 16;
+---
+
+<button class="theme" type="button" aria-pressed="false" aria-label={label} title={label} hidden>
+  <svg viewBox="0 0 16 16" width={iconSize} height={iconSize} aria-hidden="true">
+    <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5" />
+    <path d="M8 1a7 7 0 0 0 0 14z" fill="currentColor" />
+  </svg>
+</button>
+
+<script>
+  import { themeKey, type Mode } from "../lib/theme";
+
+  const darkScheme = "(prefers-color-scheme: dark)";
+  const root = document.documentElement;
+  const darkQuery = window.matchMedia(darkScheme);
+
+  function currentMode(): Mode {
+    const chosen = root.dataset.theme;
+
+    if (chosen === "light" || chosen === "dark") {
+      return chosen;
+    }
+
+    return darkQuery.matches ? "dark" : "light";
+  }
+
+  function setup(button: HTMLButtonElement): void {
+    function sync(): void {
+      button.setAttribute("aria-pressed", String(currentMode() === "dark"));
+    }
+
+    button.addEventListener("click", () => {
+      const next: Mode = currentMode() === "dark" ? "light" : "dark";
+
+      root.dataset.theme = next;
+      sync();
+
+      try {
+        localStorage.setItem(themeKey, next);
+      } catch {}
+    });
+
+    darkQuery.addEventListener("change", sync);
+    sync();
+    button.hidden = false;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".theme").forEach(setup);
+</script>

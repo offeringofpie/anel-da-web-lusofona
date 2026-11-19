@@ -1,0 +1,88 @@
+---
+import type { Lang } from "../lib/i18n";
+
+type Props = {
+  lang: Lang;
+  code: string;
+};
+
+type Strings = {
+  copy: string;
+  copyFailed: string;
+  updated: string;
+};
+
+const strings: Record<Lang, Strings> = {
+  pt: {
+    copy: "Copiar código",
+    copyFailed: "Não foi possível copiar. Seleciona o código e copia-o à mão.",
+    updated: "Código atualizado.",
+  },
+  en: {
+    copy: "Copy code",
+    copyFailed: "Couldn't copy. Select the code and copy it by hand.",
+    updated: "Code updated.",
+  },
+};
+
+const { lang, code } = Astro.props;
+
+const text = strings[lang];
+---
+
+<div class="snippet">
+  <div class="actions">
+    <button class="copy" type="button">{text.copy}</button>
+    <span
+      class="status"
+      role="status"
+      data-failed={text.copyFailed}
+      data-updated={text.updated}
+    ></span>
+  </div>
+  <pre tabindex="0"><code>{code}</code></pre>
+</div>
+
+<script>
+  const statusDelay = 2000;
+  const updateDelay = 500;
+
+  function setup(snippet: HTMLElement): void {
+    const code = snippet.querySelector("code")!;
+    const copy = snippet.querySelector(".copy")!;
+    const status = snippet.querySelector<HTMLElement>(".status")!;
+    const { failed = "", updated = "" } = status.dataset;
+    let timer = 0;
+
+    function hold(message: string): void {
+      clearTimeout(timer);
+      status.textContent = message;
+    }
+
+    function flash(message: string): void {
+      hold(message);
+      timer = window.setTimeout(() => {
+        status.textContent = "";
+      }, statusDelay);
+    }
+
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? "");
+      } catch {
+        hold(failed);
+        return;
+      }
+
+      hold("");
+    });
+
+    snippet.addEventListener("update", (event) => {
+      code.textContent = (event as CustomEvent<string>).detail;
+      clearTimeout(timer);
+      timer = window.setTimeout(() => flash(updated), updateDelay);
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".snippet").forEach(setup);
+</script>

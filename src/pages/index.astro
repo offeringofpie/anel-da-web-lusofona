@@ -1,0 +1,23 @@
+---
+import Base from "../layouts/Base.astro";
+import { ring, withBase } from "../lib/members";
+import { route } from "../lib/i18n";
+
+const randomHref = withBase("/random/");
+const membersHref = route("members", "pt");
+const rulesHref = route("rules", "pt");
+const joinHref = route("join", "pt");
+---
+
+<Base lang="pt" page="home" title={ring.name} description={ring.description.pt}>
+  <h1>{ring.name}</h1>
+  <p class="lead">{ring.description.pt}</p>
+  <a class="sign jump" href={randomHref} target="_blank">Ir para um site ao acaso</a>
+  <p>
+    Preferes escolher? <a href={membersHref}>Ver todos os membros</a>.
+  </p>
+  <p>
+    Tens um site? Lê as <a href={rulesHref}>regras</a> e
+    <a href={joinHref}>junta-te a nós</a>.
+  </p>
+</Base>

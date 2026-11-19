@@ -1,0 +1,29 @@
+---
+import Base from "../../layouts/Base.astro";
+import MemberList from "../../components/MemberList.astro";
+import { ring, withBase } from "../../lib/members";
+import { route } from "../../lib/i18n";
+
+const opmlHref = withBase("/feeds.opml");
+const bannerHref = `${route("join", "en")}#banner`;
+---
+
+<Base lang="en" page="members" title={`Members · ${ring.name}`} description={`Every site in ${ring.name}, in the order the banner walks them.`}>
+  <h1>Members</h1>
+  <p class="lead">
+    Each door is a site, in ring order. The banner's → arrow takes you to the
+    next door, and after the last one it loops back to the first.
+  </p>
+  <p>
+    Use a feed reader? <a href={opmlHref} download>Download the OPML file</a>
+    with every member's feed.
+  </p>
+
+  <MemberList lang="en" />
+
+  <h2>Show the banner</h2>
+  <p>
+    Already a member? The banner code is on the
+    <a href={bannerHref}>join page</a>.
+  </p>
+</Base>
