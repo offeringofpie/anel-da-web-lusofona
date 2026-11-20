@@ -6,4 +6,9 @@
     "banner": "https://jlopes.eu/buttons/jl.gif",
     "description": "Blog e jardim digital."
   }
+  {
+    "name": "pinho.org",
+    "url": "http://pinho.org",
+    "languages": ["pt-pt"],
+  }
 ]
