@@ -5,14 +5,15 @@ export type Page = "home" | "members" | "rules" | "join";
 
 type Locale = {
   htmlLang: string;
+  ogLocale: string;
   name: string;
 };
 
 export const langs: Lang[] = ["pt", "en"];
 
 export const locales: Record<Lang, Locale> = {
-  pt: { htmlLang: "pt-PT", name: "Português" },
-  en: { htmlLang: "en", name: "English" },
+  pt: { htmlLang: "pt-PT", ogLocale: "pt_PT", name: "Português" },
+  en: { htmlLang: "en", ogLocale: "en_GB", name: "English" },
 };
 
 const paths: Record<Page, Record<Lang, string>> = {
