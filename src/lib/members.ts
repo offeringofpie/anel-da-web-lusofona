@@ -3,7 +3,7 @@ import membersData from "../data/members.json";
 import type { Lang } from "./i18n";
 import { hostname } from "./banner";
 
-export type Member = {
+type Member = {
   name: string;
   url: string;
   feed?: string;
@@ -12,7 +12,7 @@ export type Member = {
   banner?: string;
 };
 
-export type Ring = {
+type Ring = {
   name: string;
   description: Record<Lang, string>;
   url: string;
@@ -33,21 +33,32 @@ function requireString(value: unknown, label: string): string {
   return value;
 }
 
-function requireHttps(value: string, label: string): string {
-  let parsed: URL;
+const webProtocols = ["http:", "https:"];
+
+function parseUrl(value: string, label: string): URL {
   try {
-    parsed = new URL(value);
+    return new URL(value);
   } catch {
     return fail(`${label} is not a valid URL: ${value}`);
   }
-  if (parsed.protocol !== "https:") {
+}
+
+function requireHttps(value: string, label: string): string {
+  if (parseUrl(value, label).protocol !== "https:") {
     fail(`${label} must use https: ${value}`);
   }
   return value;
 }
 
+function requireUrl(value: string, label: string): string {
+  if (!webProtocols.includes(parseUrl(value, label).protocol)) {
+    fail(`${label} must use http or https: ${value}`);
+  }
+  return value;
+}
+
 function requireOrigin(value: string, label: string): string {
-  requireHttps(value, label);
+  requireUrl(value, label);
   const parsed = new URL(value);
   if (parsed.pathname !== "/" || parsed.search !== "" || parsed.hash !== "") {
     fail(`${label} must be a bare origin with no path, query, or fragment: ${value}`);
@@ -139,7 +150,7 @@ function validateMembers(data: unknown): Member[] {
     const member: Member = { name, url };
 
     if (raw.feed !== undefined) {
-      member.feed = requireHttps(requireString(raw.feed, `${label}.feed`), `${label}.feed`);
+      member.feed = requireUrl(requireString(raw.feed, `${label}.feed`), `${label}.feed`);
     }
     if (raw.description !== undefined) {
       member.description = requireString(raw.description, `${label}.description`);
@@ -148,7 +159,7 @@ function validateMembers(data: unknown): Member[] {
       member.languages = requireLanguages(raw.languages, `${label}.languages`);
     }
     if (raw.banner !== undefined) {
-      member.banner = requireHttps(requireString(raw.banner, `${label}.banner`), `${label}.banner`);
+      member.banner = requireUrl(requireString(raw.banner, `${label}.banner`), `${label}.banner`);
     }
     return member;
   });

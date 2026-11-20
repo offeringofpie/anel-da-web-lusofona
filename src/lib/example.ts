@@ -1,6 +1,6 @@
 import type { Lang } from "./i18n";
 
-export type Example = {
+type Example = {
   name: string;
   site: string;
   description: string;

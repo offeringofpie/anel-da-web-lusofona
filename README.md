@@ -35,7 +35,7 @@ Faz fork deste repositório e acrescenta isto ao fim de
 
 Antes de o abrires, confirma que:
 
-- O teu site está acessível por https.
+- O teu site está acessível, de preferência por https.
 - A faixa está visível no teu site.
 - O site segue as [regras](https://offeringofpie.github.io/anel-da-web-lusofona/regras/).
 
@@ -76,7 +76,7 @@ Fork this repository and add this to the end of `src/data/members.json`. Only
 
 Before you open it, check that:
 
-- Your site is reachable over https.
+- Your site is reachable, ideally over https.
 - The banner is visible on your site.
 - Your site follows the [rules](https://offeringofpie.github.io/anel-da-web-lusofona/en/rules/).
 
