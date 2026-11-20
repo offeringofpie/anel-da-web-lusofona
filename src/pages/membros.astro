@@ -2,10 +2,8 @@
 import Base from "../layouts/Base.astro";
 import MemberList from "../components/MemberList.astro";
 import { ring, withBase } from "../lib/members";
-import { route } from "../lib/i18n";
 
 const opmlHref = withBase("/feeds.opml");
-const bannerHref = `${route("join", "pt")}#banner`;
 ---
 
 <Base lang="pt" page="members" title={`Membros · ${ring.name}`} description="Todos os sites do webring, pela ordem em que a faixa os percorre.">
